@@ -1,0 +1,28 @@
+<idea-plugin>
+    <id>com.wiley.qa.pagemarks</id>
+    <name>PageMarks</name>
+    <version>1.0</version>
+    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+
+    <description><![CDATA[
+      Enter short description for your plugin here.<br>
+      <em>most HTML tags may be used</em>
+    ]]></description>
+
+    <change-notes><![CDATA[
+    ]]>
+    </change-notes>
+    <idea-version since-build="173.0"/>
+    <depends>com.intellij.modules.lang</depends>
+    <extensions defaultExtensionNs="com.intellij">
+        <psi.referenceContributor language="JAVA"
+                                  implementation="com.wiley.qa.pagemarks.references.TitleReferenceContributor"/>
+        <completion.contributor language="JAVA"
+                                implementationClass="com.wiley.qa.pagemarks.completion.TitleCompletionContributor"/>
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
+
+</idea-plugin>
