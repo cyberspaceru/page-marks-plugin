@@ -18,6 +18,7 @@ public class TitleCompletionProvider extends CompletionProvider<CompletionParame
         StringMarkContext mark = literalExpression != null ? StringMarkContext.toStringMarkContext(literalExpression) : null;
         if (mark != null) {
             mark.findTitles().forEach(x -> resultSet.addElement(LookupElementBuilder.create(x)));
+            resultSet.stopHere();
         }
     }
 }

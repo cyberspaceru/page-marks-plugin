@@ -1,4 +1,8 @@
 /target/*
+
 /.project/*
+
 /.idea/*
+
 /out/*
+*.iml

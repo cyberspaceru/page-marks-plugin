@@ -45,7 +45,7 @@ public class StringMarkContext {
         return annotations()
                 .filter(x ->  {
                     String value = AnnotationUtil.getStringAttributeValue(x, "value");
-                    return title.equals(value);
+                    return title != null && title.equals(value);
                 })
                 .map(PsiAnnotation::getOwner)
                 .filter(x -> x instanceof PsiModifierListImpl)
@@ -78,8 +78,11 @@ public class StringMarkContext {
     private static PsiClass findPage(PsiMethod psiMethod) {
         return Arrays.stream(psiMethod.getAnnotations())
                 .filter(x -> PAGE_PROVIDER_QUALIFIED_NAME.equals(x.getQualifiedName()))
-                .map(x -> (PsiClassObjectAccessExpression) x.getParameterList().getAttributes()[0].getValue())
-                .map(x -> x.getOperand().getType())
+                .map(x -> (PsiClassObjectAccessExpression) x.getParameterList().getAttributes()[0].getValue()).filter(Objects::nonNull)
+                .map(PsiClassObjectAccessExpression::getOperand)
+                .filter(Objects::nonNull)
+                .map(PsiTypeElement::getType)
+                .filter(Objects::nonNull)
                 .map(PsiTypesUtil::getPsiClass)
                 .findFirst()
                 .orElse(null);
