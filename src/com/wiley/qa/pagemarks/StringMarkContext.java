@@ -4,6 +4,7 @@ import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiModifierListImpl;
 import com.intellij.psi.impl.source.tree.java.PsiLiteralExpressionImpl;
+import com.intellij.psi.impl.source.tree.java.PsiNameValuePairImpl;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiTypesUtil;
 
@@ -43,7 +44,7 @@ public class StringMarkContext {
 
     public PsiField findFieldByTitle(String title) {
         return annotations()
-                .filter(x ->  {
+                .filter(x -> {
                     String value = AnnotationUtil.getStringAttributeValue(x, "value");
                     return title != null && title.equals(value);
                 })
@@ -68,7 +69,6 @@ public class StringMarkContext {
                     }
                     return null;
                 })
-                .filter(Objects::nonNull)
                 .orElse(null);
     }
 
@@ -78,11 +78,13 @@ public class StringMarkContext {
     private static PsiClass findPage(PsiMethod psiMethod) {
         return Arrays.stream(psiMethod.getAnnotations())
                 .filter(x -> PAGE_PROVIDER_QUALIFIED_NAME.equals(x.getQualifiedName()))
-                .map(x -> (PsiClassObjectAccessExpression) x.getParameterList().getAttributes()[0].getValue()).filter(Objects::nonNull)
+                .map(PsiAnnotation::getParameterList)
+                .map(PsiAnnotationParameterList::getAttributes)
+                .filter(x -> x.length > 0 && x[0] instanceof PsiNameValuePairImpl)
+                .map(x -> (PsiClassObjectAccessExpression) x[0].getValue())
+                .filter(Objects::nonNull)
                 .map(PsiClassObjectAccessExpression::getOperand)
-                .filter(Objects::nonNull)
                 .map(PsiTypeElement::getType)
-                .filter(Objects::nonNull)
                 .map(PsiTypesUtil::getPsiClass)
                 .findFirst()
                 .orElse(null);
